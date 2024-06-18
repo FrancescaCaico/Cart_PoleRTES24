@@ -39,9 +39,11 @@ public:
         - La posizione predefinita del pendolo al centro e in verticale
         - I valori del regolatore PID --> è necessario perchè altrimenti i coefficienti passati avranno effetto sulla nuova simulazione.  */
 
-    reset_service_ = this->create_service<std_srvs::srv::Empty>("/reset_simulation", [this](const std::shared_ptr<std_srvs::srv::Empty::Request> request,std::shared_ptr<std_srvs::srv::Empty::Response> response)
+   reset_service_ = this->create_service<std_srvs::srv::Empty>(
+            "/reset_simulation", [this](const std::shared_ptr<std_srvs::srv::Empty::Request> request,
+                                        std::shared_ptr<std_srvs::srv::Empty::Response> response)
             {
-                this->resetPID(request, response);
+                this->resetSimulationCallback(request, response);
             });
 }
 
@@ -102,10 +104,13 @@ private:
         return value;
     }
     
-    void resetPID(const std::shared_ptr<std_srvs::srv::Empty::Request> request,const std::shared_ptr<std_srvs::srv::Empty::Response> response)
+      void resetSimulationCallback(const std::shared_ptr<std_srvs::srv::Empty::Request> request,const std::shared_ptr<std_srvs::srv::Empty::Response> response)
     {
+        // Reimposta i parametri PID ai valori iniziali
         integral_ = 0.0;
         previous_error_ = 0.0;
+
+        RCLCPP_INFO(this->get_logger(), "Reset completato. Parametri PID reimpostati.");
     }
 
 
